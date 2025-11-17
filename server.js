@@ -6,11 +6,13 @@ const PORT = 3000;
 app.use(express.json());
 
 // Importa as rotas dos alunos
+// O caminho deve ser './src/routes/alunoRoutes'
 const alunoRoutes = require('./src/routes/alunoRoutes');
 
 // Usa as rotas. Tudo que estiver em alunoRoutes vai começar com /alunos
 app.use('/alunos', alunoRoutes);
 
+// Rota principal (teste)
 app.get('/', (req, res) => {
     res.send('Sistema SIGTU rodando!');
 });

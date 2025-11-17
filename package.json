@@ -18,6 +18,7 @@
   "homepage": "https://github.com/ntvecchio/Hackaton-SIGTU#readme",
   "description": "",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "prisma": "^6.19.0"
   }
 }
