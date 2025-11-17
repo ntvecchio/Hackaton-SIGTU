@@ -1,19 +1,20 @@
-// Importa o Express (a ferramenta que acabamos de instalar)
 const express = require('express');
-
-// Cria o aplicativo
 const app = express();
-
-// Define uma porta para o "site" rodar (como se fosse o número da casa)
 const PORT = 3000;
 
-// Cria uma rota simples para teste
-// Quando alguém acessar a raiz (/) vai ver essa mensagem
-app.get('/', (request, response) => {
-    response.send('Sistema de Transporte Universitário (SIGTU) está ON!');
+// IMPORTANTE: Isso permite que o servidor entenda dados enviados em JSON
+app.use(express.json());
+
+// Importa as rotas dos alunos
+const alunoRoutes = require('./src/routes/alunoRoutes');
+
+// Usa as rotas. Tudo que estiver em alunoRoutes vai começar com /alunos
+app.use('/alunos', alunoRoutes);
+
+app.get('/', (req, res) => {
+    res.send('Sistema SIGTU rodando!');
 });
 
-// Manda o servidor ficar ouvindo na porta 3000
 app.listen(PORT, () => {
-    console.log(`Servidor rodando no endereço: http://localhost:${PORT}`);
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
