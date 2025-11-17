@@ -1,16 +1,22 @@
 const express = require('express');
 const router = express.Router();
-
 const alunoController = require('../controllers/alunoController');
 
-// Define as rotas
-router.get('/', alunoController.listarAlunos);        // C-R-U-D: Read
-router.post('/', alunoController.criarAluno);       // C-R-U-D: Create
-router.patch('/:id', alunoController.atualizarAluno); // C-R-U-D: Update
+// 1. IMPORTA O NOSSO "PORTEIRO" (MIDDLEWARE)
+const checkAuth = require('../middlewares/authMiddlaware');
 
-// ===============================================
-// NOVA ROTA: DELETAR UM (DELETE)
-// ===============================================
-router.delete('/:id', alunoController.deletarAluno); // C-R-U-D: Delete
+// 2. APLICA O PORTEIRO NAS ROTAS
+
+// GET (Listar) - Rota PÚBLICA, todos podem ver
+router.get('/', alunoController.listarAlunos);
+
+// POST (Criar) - Rota PROTEGIDA
+router.post('/', checkAuth, alunoController.criarAluno);
+
+// PATCH (Atualizar) - Rota PROTEGIDA
+router.patch('/:id', checkAuth, alunoController.atualizarAluno);
+
+// DELETE (Deletar) - Rota PROTEGIDA
+router.delete('/:id', checkAuth, alunoController.deletarAluno);
 
 module.exports = router;

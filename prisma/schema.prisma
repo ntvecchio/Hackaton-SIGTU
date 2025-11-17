@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ===============================================
+// MODELO DO ALUNO (Tabela de Alunos)
+// ===============================================
+model Aluno {
+  id        Int     @id @default(autoincrement()) // ID único, auto-incremental (1, 2, 3...)
+  nome      String
+  email     String  @unique // @unique = Não pode ter 2 alunos com o mesmo email
+  rg        String  @unique // @unique = Não pode ter 2 alunos com o mesmo RG
+  cpf       String  @unique // @unique = Não pode ter 2 alunos com o mesmo CPF
+  matricula String  @unique // Matrícula da universidade
+
+  // --- Relacionamento com Ônibus ---
+  // Este campo vai guardar o ID do ônibus em que o aluno está.
+  // O '?' significa que este campo é *opcional* (pode ser 'null')
+  // Isso permite que um aluno exista *sem* estar em um ônibus.
+  onibusId  Int?
+  
+  // Esta é a "mágica" do Prisma:
+  // Ele cria a conexão virtual. "onibus" é o campo no Prisma,
+  // "Onibus" é o Model que ele se conecta, "fields" é o campo
+  // que guarda a chave, e "references" é o campo ID do ônibus.
+  onibus    Onibus? @relation(fields: [onibusId], references: [id])
+
+  // Vamos adicionar os outros campos (endereço, documentos) depois
+  // que a conexão principal estiver funcionando.
+}
+
+// ===============================================
+// MODELO DO ÔNIBUS (Tabela de Ônibus)
+// ===============================================
+model Onibus {
+  id         Int     @id @default(autoincrement())
+  placa      String  @unique // Placa do ônibus, não pode repetir
+  modelo     String
+  capacidade Int     // Número de assentos
+
+  // --- Relacionamento com Aluno ---
+  // Cada ônibus pode ter uma *lista* de alunos.
+  // 'Aluno[]' significa "uma lista (array) do tipo Aluno"
+  alunos     Aluno[]
+}
+
+// ===============================================
+// MODELO DO USUÁRIO (Tabela de Admins)
+// ===============================================
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique // Login do admin
+  password String   // A senha JÁ CRIPTOGRAFADA (hash)
+}
